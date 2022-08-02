@@ -1,0 +1,4 @@
+
+#!/bin/bash
+
+ansible all -m user -a "name=automation state=present password='{{devops | password_hash('sha512') }}'" -b -u root

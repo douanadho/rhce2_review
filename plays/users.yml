@@ -1,0 +1,38 @@
+---
+- name: User creation 
+  hosts: all
+  become: true
+  vars_files: 
+    - vars/user_list.yml
+    - secret.yml
+
+  tasks:
+
+    - name: Create users based on uid that start with one
+      user:
+        name: "{{ item.username }}"
+        password: "{{ user_password | password_hash('sha512') }}"
+        uid: "{{ item.uid }}"
+        groups: wheel
+        shell: /bin/bash
+        state: present
+        update_password: on_create
+      when: inventory_hostname in groups ['webservers'] and item.uid < 1500
+      loop: "{{ users }}"
+
+
+    - name: Create users based on uid that start with two
+      user: 
+        name: "{{ item.username }}"
+        password: "{{ user_password | password_hash('sha512') }}"
+        uid: "{{ item.uid }}"
+        groups: wheel
+        shell: /bin/bash
+        state: present
+        update_password: on_create
+      when: inventory_hostname in groups ['database'] and item.uid > 1500
+      loop: "{{ users }}"
+
+
+
+

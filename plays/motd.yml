@@ -1,0 +1,33 @@
+---
+- name: File content 
+  hosts: all
+  become: true
+  tasks:
+    - name: modify /etc/motd on the proxy group
+      copy: 
+        content: "Welcome to HAProxy server. This is only for proxy admins"
+        dest: /etc/motd
+      when: inventory_hostname in groups["proxy"]
+
+    - name: modify /etc/motd on the webservers group
+      copy:
+        content: "Welcome to Apache server. This is only for web admins"
+        dest: /etc/motd
+      when: inventory_hostname in groups["webservers"]
+
+
+    - name: modify /etc/motd on the database group
+      copy:
+        content: "Welcome to MySQL server. This is only for Database admins"
+        dest: /etc/motd
+      when: inventory_hostname in groups["database"]
+
+
+    - name: modify /etc/motd on the test group
+      copy:
+        content: "Welcome to Test server. This is only for the testing admins"
+        dest: /etc/motd
+      when: inventory_hostname in groups["test"]
+
+
+
